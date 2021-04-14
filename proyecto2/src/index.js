@@ -4,9 +4,20 @@ import ReactDOM from 'react-dom'
 const App = (props) => {
   const [selected, setSelected] = useState(0)
 
+  const getRandomInt = (min, max) => {
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
+
+  const handleClick = () => {
+    const random = getRandomInt(0, props.anecdotes.length)
+    setSelected(random)
+  }
+
   return (
     <div>
       {props.anecdotes[selected]}
+      <br/>
+      <button onClick={handleClick}>generar anecdotes</button>
     </div>
   )
 }
