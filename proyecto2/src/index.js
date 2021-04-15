@@ -1,16 +1,21 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 
-const App = (props) => {
-  const [selected, setSelected] = useState(0)
-  const [datos, setDatos] = useState(props.anecdotes)
+const maxVotes = (prev, current) => {
+  return (prev.vote > current.vote) ? prev : current
+}
 
-  const getRandomInt = (min, max) => {
-    return Math.floor(Math.random() * (max - min)) + min;
-  }
+const getRandomInt = (min, max) => {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
+const App = (props) => {
+  const [datos, setDatos] = useState(props.anecdotes)
+  const [selected, setSelected] = useState(getRandomInt(0, datos.length))
+  const [masVotado, setMasVotado] = useState(datos[selected])
 
   const handleNextClick = () => {
-    const random = getRandomInt(0, props.anecdotes.length)
+    const random = getRandomInt(0, datos.length)
     setSelected(random)
   }
 
@@ -18,15 +23,24 @@ const App = (props) => {
     let newArray = [...datos]
     newArray[selected].vote += 1
     setDatos(newArray)
+
+    const resume = newArray.reduce(maxVotes)
+    setMasVotado(resume)
   }
 
   return (
     <div>
+      <h1>Anecdote of the day</h1>
+      <br/>
       {datos[selected].anecdote}
       <br/>
       <p>tiene {datos[selected].vote} votos</p>
       <button onClick={handleVoteClick}>votos</button>
       <button onClick={handleNextClick}>siguiente anecdota</button>
+      <br/>
+      <h1>Anecdote with most votes</h1>
+      <p>{masVotado.anecdote}</p>
+      <p>tiene {masVotado.vote} votos</p>
     </div>
   )
 }
